@@ -8,6 +8,7 @@ mod sideload;
 mod pairing;
 #[macro_use]
 mod secure_storage;
+mod cert_export;
 mod error;
 mod logging;
 mod operation;
@@ -24,6 +25,7 @@ use crate::{
         delete_stored_rppairing, export_pairing_cmd, has_stored_rppairing, installed_pairing_apps,
         place_pairing_cmd,
     },
+    cert_export::export_p12,
     secure_storage::{force_disable_keyring, keyring_available},
     sideload::{SideloaderMutex, install_sidestore_operation, sideload_operation},
 };
@@ -126,6 +128,7 @@ pub fn run() {
             force_disable_keyring,
             cancel_pairing,
             has_stored_rppairing,
+            export_p12,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -44,6 +44,13 @@ rootcause = "0.12.1"
 thiserror = "2.0.18"
 strum = {version = "0.28.0", features = ["derive"] }
 uuid = { version = "1", features = ["v4"] }
+# P12 export (same versions isideload uses)
+rsa = "0.9.10"
+sha1 = "0.11"
+sha2 = "0.11"
+hex = "0.4.3"
+x509-cert = "0.2.5"
+p12-keystore = { package = "isideload-p12-keystore", version = "=0.3.0-rc4" }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-updater = "2"

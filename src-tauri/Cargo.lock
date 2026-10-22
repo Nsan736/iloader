@@ -2623,17 +2623,22 @@ version = "2.4.0"
 dependencies = [
  "chrono",
  "futures",
+ "hex",
  "idevice",
  "isideload",
+ "isideload-p12-keystore",
  "keyring",
  "once_cell",
  "plist",
  "plist-macro",
  "reqwest",
  "rootcause",
+ "rsa",
  "rustls",
  "serde",
  "serde_json",
+ "sha1 0.11.0",
+ "sha2 0.11.0",
  "strum",
  "tauri",
  "tauri-build",
@@ -2649,6 +2654,7 @@ dependencies = [
  "tracing-appender",
  "tracing-subscriber",
  "uuid",
+ "x509-cert 0.2.5",
 ]
 
 [[package]]

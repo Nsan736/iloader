@@ -131,7 +131,13 @@
     "serial_number": "Serial Number",
     "machine_name": "Machine Name",
     "machine_id": "Machine ID",
-    "revoke": "Revoke"
+    "revoke": "Revoke",
+    "export_p12": "Export P12",
+    "export_p12_desc": "Exports the current private key and its matching “iloader” development certificate as a .p12 file (e.g. for LiveContainer's Import Certificate). No certificate is created or revoked. Enter a password for the file (may be left empty).",
+    "export_p12_password": "P12 password (optional)",
+    "exporting_p12": "Exporting P12...",
+    "exported_p12_success": "P12 exported successfully!",
+    "failed_export_p12": "Failed to export P12"
   },
   "app_ids": {
     "manage": "Manage App IDs",

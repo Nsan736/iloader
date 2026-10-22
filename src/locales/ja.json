@@ -130,7 +130,13 @@
     "serial_number": "シリアル番号",
     "machine_name": "マシン名",
     "machine_id": "マシンID",
-    "revoke": "無効化 (Revoke)"
+    "revoke": "無効化 (Revoke)",
+    "export_p12": "Export P12",
+    "export_p12_desc": "今の秘密鍵と、それに合う「iloader」の開発用証明書を .p12 ファイルに書き出します（LiveContainer の「Import Certificate」用など）。証明書の作成・取り消しは行いません。ファイルのパスワードを入力してください（空欄も可）。",
+    "export_p12_password": "P12 のパスワード（空欄可）",
+    "exporting_p12": "P12 を書き出し中...",
+    "exported_p12_success": "P12 を書き出しました！",
+    "failed_export_p12": "P12 の書き出しに失敗しました"
   },
   "app_ids": {
     "manage": "App IDの管理",

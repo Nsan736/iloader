@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useError } from "../ErrorContext";
 import { useTranslation } from "react-i18next";
+import { Modal } from "../components/Modal";
 
 export type Certificate = {
   name: string;
@@ -19,6 +20,9 @@ export const Certificates = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const loadingRef = useRef<boolean>(false);
   const { err } = useError();
+  const [exportOpen, setExportOpen] = useState<boolean>(false);
+  const [exportPassword, setExportPassword] = useState<string>("");
+  const [exporting, setExporting] = useState<boolean>(false);
 
   const loadCertificates = useCallback(async () => {
     if (loadingRef.current) return;
@@ -51,6 +55,24 @@ export const Certificates = () => {
     },
     [setCertificates, loadCertificates, t],
   );
+
+  const closeExport = useCallback(() => {
+    setExportOpen(false);
+    setExportPassword("");
+  }, []);
+
+  const exportP12 = useCallback(async () => {
+    const password = exportPassword;
+    closeExport();
+    setExporting(true);
+    const promise = invoke<void>("export_p12", { password });
+    promise.finally(() => setExporting(false));
+    toast.promise(promise, {
+      loading: t("certificates.exporting_p12"),
+      success: t("certificates.exported_p12_success"),
+      error: (e) => err(t("certificates.failed_export_p12"), e),
+    });
+  }, [exportPassword, closeExport, t]);
 
   useEffect(() => {
     loadCertificates();
@@ -109,6 +131,41 @@ export const Certificates = () => {
       >
         {t("common.refresh")}
       </button>
+      <button
+        style={{ marginTop: "1em", width: "100%" }}
+        onClick={() => setExportOpen(true)}
+        disabled={exporting}
+      >
+        {t("certificates.export_p12")}
+      </button>
+      <Modal isOpen={exportOpen} close={closeExport} sizeFit>
+        <h2>{t("certificates.export_p12")}</h2>
+        <p>{t("certificates.export_p12_desc")}</p>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            exportP12();
+          }}
+        >
+          <input
+            type="password"
+            autoComplete="new-password"
+            placeholder={t("certificates.export_p12_password")}
+            value={exportPassword}
+            onChange={(e) => setExportPassword(e.target.value)}
+            style={{ width: "100%", boxSizing: "border-box" }}
+            autoFocus
+          />
+          <div style={{ display: "flex", gap: "0.5em", marginTop: "1em" }}>
+            <button type="button" style={{ flex: 1 }} onClick={closeExport}>
+              {t("common.cancel")}
+            </button>
+            <button type="submit" style={{ flex: 1 }}>
+              {t("certificates.export_p12")}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </>
   );
 };

@@ -1,0 +1,61 @@
+name: "Build iloader (Windows, unsigned)"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Cache Rust and bun dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+            node_modules
+          key: windows-iloader-p12-${{ hashFiles('**/Cargo.lock', 'bun.lock') }}
+          restore-keys: |
+            windows-iloader-p12-
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Add MSVC to PATH
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Perl and Make for Windows
+        run: choco install strawberryperl make --no-progress
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install frontend dependencies
+        run: bun i --frozen-lockfile
+
+      - name: Clean old bundles
+        run: bunx rimraf src-tauri/target/release/bundle
+
+      # ci.conf.json disables the updater, so this build never auto-updates to upstream
+      - name: Build
+        uses: tauri-apps/tauri-action@v0
+        with:
+          args: --config src-tauri/ci.conf.json
+
+      - name: Upload Windows installers
+        uses: actions/upload-artifact@v7
+        with:
+          name: iloader-p12-windows
+          path: |
+            ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.exe
+            ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.msi
+            ${{ github.workspace }}/src-tauri/target/release/iloader.exe
